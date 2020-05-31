@@ -1,7 +1,7 @@
 NAME    := hello-rest-c
-VERSION := 0.1a
-CC      :=  gcc
-LIBS    := -lmicrohttpd -lpthread ${EXTRA_LIBS} 
+VERSION := 1.0.0-SNAPSHOT
+CC      := gcc
+LIBS    := -lmicrohttpd -lpthread ${EXTRA_LIBS}
 TARGET	:= $(NAME)
 SOURCES := $(shell find src/ -type f -name *.c)
 OBJECTS := $(patsubst src/%,build/%,$(SOURCES:.c=.o))
@@ -10,18 +10,18 @@ DESTDIR := /
 PREFIX  := /usr
 BINDIR  := $(DESTDIR)/$(PREFIX)/bin
 SHARE   := $(DESTDIR)/$(PREFIX)/share/$(TARGET)
-CFLAGS  := -O3 -fpie -fpic -Wall -Werror -DNAME=\"$(NAME)\" -DVERSION=\"$(VERSION)\" -DSHARE=\"$(SHARE)\" -DPREFIX=\"$(PREFIX)\" -I include ${EXTRA_CFLAGS} -ffunction-sections -fdata-sections
-LDFLAGS := -s -pie -Wl,--gc-sections   ${EXTRA_LDFLAGS}
+CFLAGS  := -O3 -fpie -fpic -Wall -DNAME=\"$(NAME)\" -DVERSION=\"$(VERSION)\" -DSHARE=\"$(SHARE)\" -DPREFIX=\"$(PREFIX)\" -I include ${EXTRA_CFLAGS}
+LDFLAGS := ${EXTRA_LDFLAGS}
 
-$(TARGET): $(OBJECTS) 
-	$(CC) $(LDFLAGS) -o $(TARGET) $(OBJECTS) $(LIBS) 
+$(TARGET): $(OBJECTS)
+	$(CC) $(LDFLAGS) -o $(TARGET) $(OBJECTS) $(LIBS)
 
 build/%.o: src/%.c
 	@mkdir -p build/
 	$(CC) $(CFLAGS) -MD -MF $(@:.o=.deps) -c -o $@ $<
 
 clean:
-	@echo "  Cleaning..."; $(RM) -r build/ $(TARGET) 
+	@echo "Cleaning..."; $(RM) -r build/ $(TARGET)
 
 install: $(TARGET)
 	mkdir -p $(DESTDIR)/$(PREFIX) $(DESTDIR)/$(BINDIR) $(DESTDIR)/$(MANDIR)
@@ -31,4 +31,3 @@ install: $(TARGET)
 -include $(DEPS)
 
 .PHONY: clean
-

@@ -1,13 +1,12 @@
 /*==========================================================================
-
   hello-ws-c
   defs.h
   Copyright (c)2020 Kevin Boone
   Distributed under the terms of the GPL v3.0
-
 ==========================================================================*/
 
 #pragma once
+#include <stdint.h>
 
 // Boolean
 
@@ -15,7 +14,7 @@
 #define TRUE 1
 #endif
 
-#ifndef FALSE 
+#ifndef FALSE
 #define FALSE 0
 #endif
 
@@ -45,14 +44,10 @@ typedef unsigned char UTF8;
 typedef int32_t UTF32;
 #endif
 
-
 #ifdef __cplusplus
-#define BEGIN_DECLS exetern "C" { 
+#define BEGIN_DECLS exetern "C" {
 #define END_DECLS }
 #else
-#define BEGIN_DECLS 
-#define END_DECLS 
+#define BEGIN_DECLS
+#define END_DECLS
 #endif
-
-
-
