@@ -21,7 +21,7 @@ build/%.o: src/%.c
 	$(CC) $(CFLAGS) -MD -MF $(@:.o=.deps) -c -o $@ $<
 
 clean:
-	@echo "Cleaning..."; $(RM) -r build/ $(TARGET)
+	$(RM) -r build/ $(TARGET)
 
 install: $(TARGET)
 	mkdir -p $(DESTDIR)/$(PREFIX) $(DESTDIR)/$(BINDIR) $(DESTDIR)/$(MANDIR)

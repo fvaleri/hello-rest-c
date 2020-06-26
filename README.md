@@ -32,3 +32,36 @@ To build the example you'll need the libmicrohttpd development files
 -- e.g., `dnf install libmicrohttpd-devel` (lnx) or `brew install libmicrohttpd`
 (mac). Although libmicrohttpd has dependencies, I don't think my code has any
 dependencies of its own.
+
+## Run on Kubernetes
+
+Run the lightweight image built from the `Dockerfile` in any Kubernetes distribution.
+
+```sh
+kubectl create namespace test
+kubectl config set-context --current --namespace=test
+
+kubectl create deployment hello --image="quay.io/fvaleri/hello-rest-c:latest"
+kubectl expose deployment hello --name=hello-service --port=8080
+kubectl create -f - <<EOF
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: hello-ingress
+  namespace: test
+spec:
+  rules:
+    - host: hello.minikube.io
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: hello-service
+              servicePort: 8080
+EOF
+
+sudo echo "$(minikube ip) hello.minikube.io" >> /etc/hosts
+
+HOST="$(oc get ingress hello-ingress -o=jsonpath='{.spec.rules[0].host}{"\n"}')"
+curl http://$HOST/greet/fede
+```
